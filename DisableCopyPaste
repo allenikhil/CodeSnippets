@@ -1,0 +1,5 @@
+$(document).ready(function() {
+		//Disable full page
+		$('body').bind('cut copy paste', function(e) {
+			e.preventDefault();
+		});
