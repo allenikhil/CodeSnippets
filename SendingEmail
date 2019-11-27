@@ -1,0 +1,168 @@
+package com.login.service;
+
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.BodyPart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+
+import com.vupadhi.Bean.TenderBean;
+
+public class SendEmail {
+ 
+	static Session session;
+    private static final String EMAIL_FROM = "nikhil.a@vupadhi.com";
+    private static final String EMAIL_TO = "nikhil.a@vupadhi.com";
+
+    private static final String EMAIL_SUBJECT = "Sample Mail";
+
+    public static void main(String[] args) {
+
+    	Properties props =new Properties();
+    	
+    	props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.host", "send.one.com");
+        
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.debug", "true");
+        
+        // creating session object to get properties 
+        session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("nikhil.a@vupadhi.com", "Vupadhi12345");
+        }
+        });
+        try {
+			sendEmail();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    public static void sendEmail() throws SQLException, ClassNotFoundException
+    {
+    	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+        String userName = "dev";
+        String password = "pass@word";
+        String url = "jdbc:sqlserver://192.168.0.10\\MSDB;databaseName=Test";
+        Connection con = DriverManager.getConnection(url, userName, password);
+        Statement s1 = con.createStatement();
+
+        LocalDate date = LocalDate.now(); 
+    	System.out.println("one day before current date is "+ date.minusDays(1));
+    	
+        String publishedDate="2019/11/21";
+        
+       // String k1="DocumentTest";
+        
+        ResultSet results = s1.executeQuery(" SELECT [sNameOfWork],stypeofwork,stendersubject,[nTenderID],[sTenderNo],[sDepartment],[sCircleDivisionName],[dtPreBidOpeningDate],[dtBidSubmissionClosingDate] FROM TestTable where datediff(day, dtPublishedDate, '"+publishedDate+"') = 0 ");
+        Map<String,TenderBean> list = new LinkedHashMap<String,TenderBean>();
+        List<String> keywordsList=new ArrayList<>();
+        keywordsList.add("E-procurement Software"); keywordsList.add("Website Development Service");keywordsList.add("Development software");keywordsList.add("System Integrator");
+        keywordsList.add("e-learning Software");keywordsList.add("Procurement Software");keywordsList.add("Priced EOI");keywordsList.add("unPriced EOI");
+        keywordsList.add("it enable");keywordsList.add("estamp, electronic stamp");keywordsList.add("portal Management");keywordsList.add("citizen service");
+        keywordsList.add("Training");keywordsList.add("computer education");keywordsList.add("computer training");keywordsList.add("it training");
+        keywordsList.add("operation & maintenance");keywordsList.add("Implementation");keywordsList.add("migration");keywordsList.add("skill development");keywordsList.add("RFQ, NCB, ICB, EoI, expression of interest");
+        keywordsList.add("DocumentTest");
+        if(results!=null){
+            while (results.next()){
+            	for(String key :keywordsList)
+            	{
+            		if(results.getString("sNameOfWork").contains(key)||results.getString("stypeofwork").contains(key)||results.getString("stendersubject").contains(key) )
+            		{
+		            	TenderBean bean=new TenderBean();
+						bean.setnTenderID(results.getString("nTenderID"));
+						bean.setsTenderNo(results.getString("sTenderNo"));
+						bean.setsNameOfWork(results.getString("sNameOfWork"));
+						bean.setsDepartment(results.getString("sDepartment"));
+						bean.setsCircleDivisionName(results.getString("sCircleDivisionName"));
+						bean.setDtPreBidOpeningDate(results.getString("dtPreBidOpeningDate"));
+						bean.setDtBidSubmissionClosingDate(results.getString("dtBidSubmissionClosingDate"));
+						list.put(results.getString("nTenderID"),bean);
+            		}
+            	}
+              }
+        }
+        System.out.println(list);
+        System.out.println(list.size());
+       
+        try {
+        	 Message msg = new MimeMessage(session);
+        	 
+            msg.setFrom(new InternetAddress(EMAIL_FROM));
+
+            msg.setRecipients(Message.RecipientType.TO,InternetAddress.parse(EMAIL_TO));
+            	
+            msg.setSubject(EMAIL_SUBJECT);
+            
+            final StringBuilder sb = new StringBuilder();
+    		sb.append("<h3><FONT face='MS Sans Serif' color='Blue'>Published Tender List </FONT></h3><br/> <br/>");
+    		sb.append("<table cellpadding='3' cellspacing='1' width='100%' border='1'>");
+    		sb.append("<FONT face='MS Sans Serif' size=3>");
+    		sb.append("<tr>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Sl.No&nbsp</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Tender ID</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Tender No</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Name Of Work</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Department</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Circle</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Pre-bid Meeting Date</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Bid Submission Start Date</font></td>");
+    		sb.append("<td><font color='Blue' font-weight='bold'>Bid Submission Closing Date</font></td>");
+    		
+    		int size=1;
+    		for (Map.Entry<String,TenderBean> entry : list.entrySet()) {
+    			sb.append("<tr>");
+    			sb.append("<td>" + size + " </td>");
+    			sb.append("<td>" + entry.getValue().getnTenderID() + " </td>");
+    			sb.append("<td>" + entry.getValue().getsTenderNo() + " </td>");
+    			sb.append("<td>" + entry.getValue().getsNameOfWork() + " </td>");
+    			sb.append("<td>" + entry.getValue().getsDepartment() + " </td>");
+    			sb.append("<td>" + entry.getValue().getsCircleDivisionName() + " </td>");
+    			sb.append("<td>" + entry.getValue().getDtPreBidOpeningDate() + "</td>");
+    			sb.append("<td>" + entry.getValue().getBidSubmissionStartDate() + "</td>");
+    			sb.append("<td>" + entry.getValue().getDtBidSubmissionClosingDate() + "</td>");
+    			sb.append("</tr>");
+    			size++;
+    		}
+    		sb.append("</FONT>");
+    		sb.append("</table>");
+    		sb.append("<br/><br/>");
+    		sb.toString();
+    		
+    		String htmlText = sb.toString();
+    		MimeMultipart multipart = new MimeMultipart("related");
+    		BodyPart messageBodyPart = new MimeBodyPart();
+    		messageBodyPart.setContent(htmlText, "text/html");
+    		multipart.addBodyPart(messageBodyPart);
+    		
+            msg.setContent(multipart);
+        //    Transport.send(msg);
+            System.out.println("Send");
+			
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+}
