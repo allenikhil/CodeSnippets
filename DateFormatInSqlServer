@@ -1,0 +1,5 @@
+select convert(varchar(10),@mydate, 101) + right(convert(varchar(32),@mydate,100),8)
+
+|           COLUMN_0 |
+----------------------
+| 02/22/2013  9:36AM |
