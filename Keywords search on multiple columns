@@ -1,0 +1,6 @@
+SELECT  * FROM table t JOIN dbo.Split('Keywords',',') s ON (t.column1 LIKE N'%'+s.Items+'%' OR [t].column2 LIKE N'%'+s.Items+'%') where condition
+
+
+Example:
+
+SELECT [nTenderID],[sTenderNo],[sNameOfWork],[sDepartment],[sCircleDivisionName],CONVERT(varchar(10),[dtPreBidOpeningDate],103) + right(CONVERT(varchar(32),[dtPreBidOpeningDate],100),8) AS [dtPreBidOpeningDate],CONVERT(varchar(10),[dtTenderOpeningDate],103) + right(convert(varchar(32),[dtTenderOpeningDate],100),8) AS dtTenderOpeningDate, CONVERT(varchar(10),[dtBidSubmissionClosingDate],103) + right(convert(varchar(32),[dtBidSubmissionClosingDate],100),8) AS [dtBidSubmissionClosingDate],mEstimatedCost,case ntendercategory when 101 then 'Works' when 102 then 'Products' when 104 then 'Services' end as  ntendercategory FROM tbltender t JOIN dbo.Split('E-procurement,Software,Website Development,SI,Design & Development,System Integrator,Application service provider,EOI,IT,operation & maintenance,O&M,Implementation,migration,Integration,Digital,Mobile,call center,support,service provider,Agency',',') s ON (t.sNameOfWork LIKE N'%'+s.Items+'%' OR [t].[sTypeOfWork] LIKE N'%'+s.Items+'%' OR [t].[sTenderSubject] LIKE N'%'+s.Items+'%')\r\nwhere dtPublishedDate >=getdate() and nStatus=105
