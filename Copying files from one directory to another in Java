@@ -1,0 +1,13 @@
+import org.apache.commons.io.FileUtils;
+
+// for jar click to this link --http://commons.apache.org/proper/commons-io/
+
+File source = new File("C:\\Users\\Nikhil\\Downloads\\test");
+        File dest = new File("C:\\Users\\\\Nikhil\\Desktop\\test");
+
+        try {
+            FileUtils.copyDirectory(source,dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("completed");
