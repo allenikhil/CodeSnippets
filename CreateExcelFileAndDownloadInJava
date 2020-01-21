@@ -1,0 +1,42 @@
+@RequestMapping("/downloadExcel")
+	public void downloadExcelTestFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		 //Blank workbook
+		XSSFWorkbook workbook = new XSSFWorkbook(); 
+         
+        //Create a blank sheet
+        XSSFSheet sheet = workbook.createSheet("A2Z Excel Sheet ");
+          
+        //This data needs to be written (Object[])
+        Map<String, Object[]> data = new TreeMap<String, Object[]>();
+        data.put("1", new Object[] {"S.NO", "User Id", "Company Name","Contact Person","Contact No","EmailId","Address","PanNo","GST No","Items Interested"});
+        
+          
+        //Iterate over data and write to sheet
+        Set<String> keyset = data.keySet();
+        int rownum = 0;
+        for (String key : keyset)
+        {
+            Row row = sheet.createRow(rownum++);
+            Object [] objArr = data.get(key);
+            int cellnum = 0;
+            for (Object obj : objArr)
+            {
+               Cell cell = row.createCell(cellnum++);
+               if(obj instanceof String)
+                    cell.setCellValue((String)obj);
+                else if(obj instanceof Integer)
+                    cell.setCellValue((Integer)obj);
+            }
+        }
+        try
+        {
+        	 response.setContentType("application/vnd.ms-excel");
+             response.setHeader("Content-Disposition", "attachment; filename=membershipformat.xlsx");
+             response.setHeader("charset", "iso-8859-1");
+             response.setStatus(HttpServletResponse.SC_OK);
+             
+           
+            workbook.write(response.getOutputStream());
+            
+            workbook.close();
+                  } 
