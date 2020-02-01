@@ -1,0 +1,23 @@
+function compareDate(date1, date2) {
+
+		var date1Array = date1.split("/");
+		var date2Array = date2.split("/");
+		
+		var date1Date = new Date(date1Array[1]+"/"+date1Array[0]+"/"+date1Array[2]); 
+		var date2Date = new Date(date2Array[1]+"/"+date2Array[0]+"/"+date2Array[2]); 
+		var isOk = true;
+		if(date1Date.getTime() >= date2Date.getTime()) {
+			isOk = false;
+		}
+		
+		return isOk;
+	}
+
+
+
+
+
+if(compareDate($("#dtValidFrom").val(), $("#dtValidTo").val()) == false) {
+    	    	$("#errorMessage").html(" From Date must be less than To Date.");
+    	    		 return false;
+    	    	}
