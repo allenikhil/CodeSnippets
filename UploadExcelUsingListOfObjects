@@ -1,0 +1,99 @@
+MultipartFile multipartFile = bean.getUpFile();
+		List<VendorEnrollmentReqVM> dataList=null;
+		try
+		{
+			 HashMap<Integer, VendorEnrollmentReqVM> mp= new HashMap<Integer, VendorEnrollmentReqVM>();
+					Integer RowCount = 0;
+					String cellVAlue = null;
+					XSSFWorkbook xlsxworkbook = null;
+
+					xlsxworkbook = new XSSFWorkbook(multipartFile.getInputStream());
+					
+					 
+					XSSFSheet sheet = xlsxworkbook.getSheetAt(0);
+					VendorEnrollmentReqVM data=new VendorEnrollmentReqVM();
+					//System.err.println("Sheet name is::" + sheet.getSheetName());				
+
+					//Iterate through each rows one by one
+			        Iterator<Row> rowIterator = sheet.iterator();
+			        Iterator<Row> rowIterator1 = sheet.iterator();
+
+					while (rowIterator1.hasNext()) {
+						RowCount++;
+						rowIterator1.next();
+					}
+					
+					for (int row1 = 0; row1 < RowCount; row1++) {
+						Row row = rowIterator.next();
+						int i = 0;
+						if (row1 > 0) {
+			            //For each row, iterate through all the columns
+			            Iterator<Cell> cellIterator = row.cellIterator();
+			            while (cellIterator.hasNext()) 
+			            {
+			                Cell cell = cellIterator.next();
+
+									i++;
+									
+									switch (cell.getCellType()) {
+									case Cell.CELL_TYPE_NUMERIC:
+
+										double value = cell.getNumericCellValue();
+										int val = (int) value;
+										//System.err.println(value
+//												+ "----------------------");
+										cellVAlue = Integer.toString(val);
+//										cellDate = Double.toString(value);
+										break;
+									case Cell.CELL_TYPE_STRING:
+										cellVAlue = cell.getStringCellValue();
+										// //System.err.println(cellVAlue +
+										// "====string==="+i);
+										break;
+									default:
+										break;
+
+									}
+
+									switch (i) {
+									
+									case 2:data.setAreaOfOperation(cellVAlue.trim());
+												mp.put(row1,data);
+												break;
+
+									case 3:		
+									data.setsLocationID(cellVAlue.trim());
+									mp.put(row1, data);
+												break;
+												
+									case 4:
+									data.setsVendorName(cellVAlue.trim());
+									mp.put(row1, data);
+										break;
+										
+									case 5:
+										
+										data.setsContactPerson(cellVAlue.trim());
+										mp.put(row1, data);
+										break;
+								
+									default:
+										break;
+
+									}
+									cellVAlue = "";
+							}
+			          //  System.out.println(mp);
+			            data=new VendorEnrollmentReqVM();
+						}
+					}
+			  dataList=  new ArrayList<VendorEnrollmentReqVM>();
+		        for (VendorEnrollmentReqVM d : mp.values()) {
+		           dataList.add(d);
+		        }
+		      //  System.out.println(dataList);
+		}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
