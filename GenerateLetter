@@ -1,0 +1,114 @@
+public void generateDocLOC(LOCBean locBean,TenderBean tenderBean,String filename) throws DocumentException, IOException {
+		  
+		  XWPFDocument document = new XWPFDocument();
+          //Write the Document in file system
+          FileOutputStream out = new FileOutputStream(new File(filename));
+          
+		/*
+		 * Font myfont = new Font(); myfont.setStyle(Font.NORMAL); myfont.setSize(11);
+		 */
+		  
+          //create Paragraph
+          XWPFParagraph p1 = document.createParagraph();
+          p1.setAlignment(ParagraphAlignment.CENTER);
+          XWPFRun run1 = p1.createRun();
+          run1.setFontSize(11);
+          run1.setText("Government of India\n" );
+          run1.addBreak();
+          run1.setText("Central Public Works Department\n");
+          run1.addBreak();
+          run1.setText("Office of Executive Engineer - "+locBean.getDivision() +"\n");
+          run1.addBreak();
+          run1.setText(locBean.getOfficerAddress()+", "+locBean.getOfficerEmail()+ " & "+ locBean.getOfficerContactNo()+"\n");
+          run1.addBreak();
+          run1.addBreak();
+          
+      	  	
+          
+		  	Date date = new Date();  
+		    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
+		    String strDate= formatter.format(date);  
+		    System.out.println(strDate);
+		    
+		   
+		    XWPFParagraph p2 = document.createParagraph();
+	          p2.setAlignment(ParagraphAlignment.LEFT);
+	          XWPFRun run2 = p2.createRun();
+		    
+		    run2.setText("NIT NO:  "+tenderBean.getsTenderNo()+"                         			 Dated: "+strDate+"\n");
+		    run2.addBreak();
+		    run2.addBreak();
+		    run2.setText("TO,\n");
+		    run2.addBreak();
+		    run2.setText(locBean.getBidderName()+"\n");
+		    run2.addBreak();
+		    run2.addBreak();
+		    run2.setText("Sub: "+tenderBean.getsNameOfWork()+"\n");
+		    run2.addBreak();
+		    run2.addBreak();
+
+	      	  run2.setText("Ref: \n");
+	      	run2.addBreak();
+	      	  run2.setText("1.Performance Guarantee submitted by vendor, dated "+locBean.getPBGIssuedDate() +" for the above work.\n");
+	      	run2.addBreak();
+	      	  run2.setText("2.This office letter of intent/acceptance of your tender issued date "+locBean.getLoaIssueDate()+".\n");
+	      	run2.addBreak();
+	      	run2.addBreak();
+	      	  
+		    run2.setText("Dear Sir (s),\n");
+		    run2.addBreak();
+		    run2.addBreak();
+		    run2.setText("1. You are requested to contact the Assistant Engineer, "+tenderBean.getsAddress()+" for taking possession of site and commencement of work.\n");
+		    run2.addBreak();
+		    run2.addBreak();
+		    run2.setText("2. You are requested to attend this office to complete the formal agreement within fifteen days from the date of issue of this letter.\n");
+		    run2.addBreak();
+		    run2.addBreak();
+		    run2.setText("Performance Bank Guarantee Details:\n");
+		    run2.addBreak();
+		    run2.setText("Performance Bank Guarantee Issued Bank:"+ locBean.getPBGIssuedBank() +"\n");
+		    run2.addBreak();
+		    run2.setText("Performance Bank Guarantee Issued Date:"+ locBean.getPBGIssuedDate() +"\n");
+		    run2.addBreak();
+		    run2.setText("Performance Bank Guarantee Validity Date:"+ locBean.getPBGNumber() +"\n");
+		    run2.addBreak();
+		    run2.setText("Performance Bank Guarantee Amount:"+ locBean.getPerformanceGuarantee() +"\n");
+		    run2.addBreak();
+		    run2.setText("                                                                                                                      \n");
+	      	  
+		    
+		    XWPFParagraph p3 = document.createParagraph();
+	          p3.setAlignment(ParagraphAlignment.RIGHT);
+	          XWPFRun run3 = p3.createRun();
+	          run3.setText("Your faithfully\n");
+	          run3.addBreak();
+	          run3.setText("Executive Engineer \n");
+	          run3.addBreak();
+	          run3.setText("For and on behalf of President of India \n");
+	          run3.addBreak();
+	          run3.setText(locBean.getDivision()+", CPWD\n");
+	          run3.addBreak();
+	          run3.addBreak();
+	      	  
+	      	  
+	          XWPFParagraph p4 = document.createParagraph();
+	          p4.setAlignment(ParagraphAlignment.RIGHT);
+	          XWPFRun run4 = p4.createRun();
+	          run4.addBreak();
+	          run4.addBreak();
+	          run4.setText("Digital Signed Required \n");
+	          run4.addBreak();
+	          run4.addBreak();
+			  run4.setText("Name and Date\n");		   
+			  run4.addBreak();
+	          run4.addBreak();
+		
+		  
+          document.write(out);
+         
+          //Close document
+          out.close();
+          System.out.println("createdWord " +filename+ " written successfully");
+		
+	}
+}
