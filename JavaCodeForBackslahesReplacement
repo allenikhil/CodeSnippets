@@ -1,0 +1,6 @@
+public static String getFilePath(String path) { // added by nikhil for adding Extra escape character in filePath
+													// 13/11/19
+		path = path.replace("\\", "\\\\");
+		path = path.replace(":/", ":\\\\");
+		return path;
+	}
