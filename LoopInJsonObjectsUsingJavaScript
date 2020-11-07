@@ -1,0 +1,30 @@
+var arr=[{
+	  "Region": "Delhi",
+	  "Tenders": 500,
+	  "subData": [{ name: "Evaluation In Progress", value: 200 }, { name: "Awarded", value: 150 }, { name: "Rejected", value: 100 }],
+	"color":am4core.color("#7FFFD4")
+	}, {
+	  "Region": "Northern Region",
+	  "Tenders": 300,
+	  "subData": [{ name: "Evaluation In Progress", value: 150 }, { name: "Awarded", value: 100 }, { name: "Rejected", value: 50 }]
+	}, {
+	  "Region": "Eastern Region",
+	  "Tenders": 200,
+	  "subData": [{ name: "Evaluation In Progress", value: 110 }, { name: "Awarded", value: 60 }, { name: "Rejected", value: 30 }],
+	  "color":am4core.color("#4B0082")
+	}, {
+	  "Region": "Western Region",
+	  "Tenders": 150,
+	  "subData": [{ name: "Evaluation In Progress", value: 80 }, { name: "Awarded", value: 40 }, { name: "Rejected", value: 30 }],
+	  "color":am4core.color("#800080")
+	}, {
+	  "Region": "Southern Region",
+	  "Tenders": 140,
+	  "subData": [{ name: "Evaluation In Progress", value: 90 }, { name: "Awarded", value: 40 }, { name: "Rejected", value: 10 }],
+	  "color":am4core.color("#CCCCFF")
+	}];;
+  
+  
+	arr.forEach(function(item){
+		  console.log('ID: ' + item.Region);
+		});
