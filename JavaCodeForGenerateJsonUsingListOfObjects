@@ -1,0 +1,54 @@
+public static String convertToJSONForPie(MisReportBean user,int count) {
+				StringBuilder obj= new StringBuilder();
+				try
+				{
+					List<String> colors=new ArrayList<String>();
+							colors.add("#CCCCFF");
+							colors.add("#800080");
+							colors.add("#4B0082");
+							colors.add("#7FFFD4");
+							colors.add("#1f77b4");
+							colors.add("#2ca02c");
+							colors.add("#ff7f0e");
+							colors.add("#d62728");
+							colors.add("#9467bd");
+							colors.add("#8c564b");
+							colors.add("#e377c2");
+							colors.add("#bcbd22");
+				      obj.append("{");
+				      
+				      if((user.getDdlDivision().isEmpty()&&user.getDdlSubDivision().isEmpty())||(!user.getDdlDivision().isEmpty()&& !user.getDdlSubDivision().isEmpty()))
+				      {
+				        obj.append("\"Region\":\"").append(user.getsMappingDepartmentName()).append("\",");
+				      }
+				      if(user.getDdlDivision().isEmpty()&& !user.getDdlSubDivision().isEmpty())
+				      {
+				        obj.append("\"Region\":\"").append(user.getDdlSubDivision()).append("\",");
+				      }
+				      if(!user.getDdlDivision().isEmpty()&& user.getDdlSubDivision().isEmpty())
+				      {
+				        obj.append("\"Region\":\"").append(user.getDdlDivision()).append("\",");
+				      }
+				      
+				      obj.append("\"Tenders\":").append(user.getTotal()).append(",");
+				      
+				      StringBuilder sb= new StringBuilder();
+				      sb.append("\"subData\":").append("[{");
+				      sb.append("name:\"").append("Tender Under Creation").append("\",");
+				      sb.append("value:").append(user.getUnderCreation()).append("}, { ");
+				      sb.append("name:\"").append("Tender Due for Bid Submission").append("\",");
+				      sb.append("value:").append(user.gettDueBid()).append("}, { ");
+				      sb.append("name:\"").append("Evaluation In Progress").append("\",");
+				      sb.append("value:").append(user.geteInProcess()).append("}, { ");
+				      sb.append("name:\"").append("Closed").append("\",");
+				      sb.append("value:").append(user.getAwarded()).append("}, { ");
+				      sb.append("name:\"").append("Rejected").append("\",");
+				      sb.append("value:").append(user.getRejected());
+				      obj.append(sb.append("}],")) ;
+				      obj.append("\"color\":").append("am4core.color('"+colors.get(count)+"')").append("},");
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			      return obj.toString();
+			  }
